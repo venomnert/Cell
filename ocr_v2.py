@@ -21,10 +21,10 @@ pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesserac
 
 def init(todayDirectory, args):
     counter = True
-    digitTop = 595
-    digitLeft = 135
-    digitWidth = 80
-    digitHeight = 25
+    digitTop = 173
+    digitLeft = 628
+    digitWidth = 112
+    digitHeight = 19
     stockName, boughtPrice, thresholdType, thresholdValue = initValues(args)
     sellHalf.has_been_called = False
 
@@ -44,14 +44,14 @@ def init(todayDirectory, args):
 
         if thresholdType == 'amount':
             if (price - boughtPrice >= (thresholdValue * 2)):  # scenario 4
-                sellAll()
+                sellAll(price)
             elif (price - boughtPrice >= thresholdValue):  # scenarion 1 & 2
                 if (sellHalf.has_been_called):
-                    sellAll()
+                    sellAll(price)
                 else:
                     sellHalf()
-            else:  # scenario 3
-                sellAll()
+            # else:  # scenario 3
+            #     sellAll(price)
 
 
 def initValues(args):
@@ -88,7 +88,8 @@ def sellHalf():
     sellHalf.has_been_called = True
 
 
-def sellAll():
+def sellAll(price):
+    print('final price', price)
     sys.exit("Sold All Stock!")
     return False
 
