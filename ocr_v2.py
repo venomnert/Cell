@@ -99,9 +99,9 @@ def main():
                     help="Enter the purchased stock name or ticker")
     ap.add_argument("-p", "--bought_price", required=True,
                     help="Enter the price the stock was bought")
-    ap.add_argument("-tt", "--thresholdtype", required=False,
+    ap.add_argument("-tt", "--thresholdtype", required=True,
                     help="Enter the price the stock was bought")
-    ap.add_argument("-tv", "--thresholdvalue", required=False,
+    ap.add_argument("-tv", "--thresholdvalue", required=True,
                     help="Enter the value of the threshold '1%' or '1 cents' ")
     args = vars(ap.parse_args())
     print(args)
