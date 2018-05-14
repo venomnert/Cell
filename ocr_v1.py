@@ -15,7 +15,7 @@ print(text)
 # Install pytesseract for windows: https://github.com/UB-Mannheim/tesseract/wiki
 # Resolve the issue that you will run into: https://stackoverflow.com/questions/34225927/pytesseract-cannot-find-the-file-specified
 # How to read numbers using pytesseract https://stackoverflow.com/questions/42881884/python-read-number-in-image-with-pytesseract
-# In order improve accuracy improve the image size by increasing the font size and changing the font family to the following: arial, bold, 16
+# In order improve accuracy improve the image size by increasing the font size and changing the font family to the following: arial, bold, 16. Black background and font is in white
 # Inspiration for the above idea came to my by reading the first post: https://news.ycombinator.com/item?id=14741124
 
 
