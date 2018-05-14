@@ -1,6 +1,7 @@
 # Personal
 img/*
 2018-*/*
+test.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
