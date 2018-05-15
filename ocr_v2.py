@@ -14,6 +14,7 @@ def init(todayDirectory, args):
     digitLeft = 665
     digitWidth = 100
     digitHeight = 14
+    boughtPriceThreshold = 0.3
     stockName, boughtPrice, thresholdType, thresholdValue = initValues(args)
     sellHalf.has_been_called = False
     boughtStock = False
@@ -33,7 +34,7 @@ def init(todayDirectory, args):
             continue
 
         if not boughtStock:
-            if price == boughtPrice:
+            if (boughtPrice <= price <= boughtPrice + boughtPriceThreshold):
                 buyAll()
                 boughtStock = True
         else:
