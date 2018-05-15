@@ -8,17 +8,6 @@ import sys
 
 pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract'
 
-
-# Record the images that is being scanned
-# Continue the process on error
-# On error record image
-# Create variables for:
-# Type of threshold: percentage or amount
-# position of buttons
-# stock name and ticker
-# bought price
-
-
 def init(todayDirectory, args):
     counter = True
     digitTop = 162
@@ -58,7 +47,6 @@ def init(todayDirectory, args):
                         sellHalf()
                 else:  # scenario 3
                     sellAll(price)
-
 
 def initValues(args):
     stockName = args['stock']
@@ -120,7 +108,6 @@ def main():
 
     todayDirectory = imgFolder()
     init(todayDirectory, args)
-
 
 if __name__ == '__main__':
     main()
