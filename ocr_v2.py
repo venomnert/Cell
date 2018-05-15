@@ -21,10 +21,10 @@ pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesserac
 
 def init(todayDirectory, args):
     counter = True
-    digitTop = 173
-    digitLeft = 628
-    digitWidth = 112
-    digitHeight = 19
+    digitTop = 162
+    digitLeft = 665
+    digitWidth = 100
+    digitHeight = 14
     stockName, boughtPrice, thresholdType, thresholdValue = initValues(args)
     sellHalf.has_been_called = False
 
@@ -50,16 +50,21 @@ def init(todayDirectory, args):
                     sellAll(price)
                 else:
                     sellHalf()
-            # else:  # scenario 3
-            #     sellAll(price)
+            else:  # scenario 3
+                sellAll(price)
 
 
 def initValues(args):
     stockName = args['stock']
     boughtPrice = float(args['bought_price'])
-    thresholdType = args['thresholdtype']
-    thresholdValue = float(args['thresholdvalue']) / \
-        100 if thresholdType == 'percentage' else float(args['thresholdvalue'])
+    
+    if args['thresholdtype'] or args['thresholdvalue'] is not None:
+        thresholdType = args['thresholdtype']
+        thresholdValue = float(args['thresholdvalue'])/ 100 if thresholdType == 'percentage' else float(args['thresholdvalue'])
+    else:
+        thresholdType = 'amount'
+        thresholdValue = 0.1
+
     return [stockName, boughtPrice, thresholdType, thresholdValue]
 
 
@@ -86,9 +91,11 @@ def saveImg(img, rootDirectory, guess, guessType, imgType):
 
 def sellHalf():
     sellHalf.has_been_called = True
+    gui.click(x=881, y=514, clicks=1, button='left')
 
 
 def sellAll(price):
+    gui.click(x=677, y=510, clicks=1, button='left')
     print('final price', price)
     sys.exit("Sold All Stock!")
     return False
@@ -100,9 +107,9 @@ def main():
                     help="Enter the purchased stock name or ticker")
     ap.add_argument("-p", "--bought_price", required=True,
                     help="Enter the price the stock was bought")
-    ap.add_argument("-tt", "--thresholdtype", required=True,
+    ap.add_argument("-tt", "--thresholdtype", required=False,
                     help="Enter the price the stock was bought")
-    ap.add_argument("-tv", "--thresholdvalue", required=True,
+    ap.add_argument("-tv", "--thresholdvalue", required=False,
                     help="Enter the value of the threshold '1%' or '1 cents' ")
     args = vars(ap.parse_args())
     print(args)
@@ -113,3 +120,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# sell location: (677, 510)
+# sell-half location: (881, 514)
+# buy location: (885, 479)
