@@ -27,6 +27,7 @@ def init(todayDirectory, args):
     digitHeight = 14
     stockName, boughtPrice, thresholdType, thresholdValue = initValues(args)
     sellHalf.has_been_called = False
+    boughtStock = False
 
     while(counter):
         img = gui.screenshot(
@@ -42,16 +43,21 @@ def init(todayDirectory, args):
             saveImg(img, todayDirectory, wrongGuess, 'false', 'png')
             continue
 
-        if thresholdType == 'amount':
-            if (price - boughtPrice >= (thresholdValue * 2)):  # scenario 4
-                sellAll(price)
-            elif (price - boughtPrice >= thresholdValue):  # scenarion 1 & 2
-                if (sellHalf.has_been_called):
+        if not boughtStock:
+            if price == boughtPrice:
+                buyAll()
+                boughtStock = True
+        else:
+            if thresholdType == 'amount':
+                if (price - boughtPrice >= (thresholdValue * 2)):  # scenario 4
                     sellAll(price)
-                else:
-                    sellHalf()
-            else:  # scenario 3
-                sellAll(price)
+                elif (price - boughtPrice >= thresholdValue):  # scenarion 1 & 2
+                    if (sellHalf.has_been_called):
+                        sellAll(price)
+                    else:
+                        sellHalf()
+                else:  # scenario 3
+                    sellAll(price)
 
 
 def initValues(args):
@@ -67,13 +73,11 @@ def initValues(args):
 
     return [stockName, boughtPrice, thresholdType, thresholdValue]
 
-
 def imgFolder():
     currDate = datetime.date.today().strftime("%Y-%m-%d")
     if not os.path.exists(currDate):
         os.makedirs(currDate)
     return currDate
-
 
 def saveImg(img, rootDirectory, guess, guessType, imgType):
     guess = guess.replace('\\', '-').replace('//', '-').replace(':', '-').replace('*', "-").replace(
@@ -88,18 +92,18 @@ def saveImg(img, rootDirectory, guess, guessType, imgType):
             '-' + guessType + '.' + imgType
         img.save(os.path.abspath(os.path.join(rootDirectory, fileName)))
 
-
 def sellHalf():
     sellHalf.has_been_called = True
     gui.click(x=881, y=514, clicks=1, button='left')
-
 
 def sellAll(price):
     gui.click(x=677, y=510, clicks=1, button='left')
     print('final price', price)
     sys.exit("Sold All Stock!")
-    return False
 
+def buyAll():
+    gui.click(x=885, y=479, clicks=1, button='left')
+    print('Bought stock')
 
 def main():
     ap = argparse.ArgumentParser()
