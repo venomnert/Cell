@@ -45,7 +45,7 @@ def init(todayDirectory, args):
                         sellAll(price)
                     else:
                         sellHalf()
-                else:  # scenario 3
+                elif (price - boughtPrice < (-1 * thresholdValue)):  # scenario 3
                     sellAll(price)
 
 def initValues(args):
