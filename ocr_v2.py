@@ -35,19 +35,21 @@ def init(todayDirectory, args):
 
         if not boughtStock:
             if (boughtPrice <= price <= boughtPrice + boughtPriceThreshold):
+                boughtPrice = price
                 buyAll()
                 boughtStock = True
         else:
-            if thresholdType == 'amount':
-                if (price - boughtPrice >= (thresholdValue * 2)):  # scenario 4
-                    sellAll(price)
-                elif (price - boughtPrice >= thresholdValue):  # scenarion 1 & 2
-                    if (sellHalf.has_been_called):
+            if (price - boughtPrice >= (thresholdValue * 2)):  # scenario 4
+                sellAll(price)
+            elif (price - boughtPrice >= thresholdValue):  # scenarion 1 & 2
+                if (sellHalf.has_been_called):
+                    if (price <= boughtPrice + thresholdValue):
                         sellAll(price)
-                    else:
-                        sellHalf()
-                elif (price - boughtPrice < (-1 * thresholdValue)):  # scenario 3
-                    sellAll(price)
+                else:
+                    sellHalf()
+            elif (price - boughtPrice < (-1 * thresholdValue)):  # scenario 3
+                sellAll(price)
+            
 
 def initValues(args):
     stockName = args['stock']
