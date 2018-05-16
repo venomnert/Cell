@@ -43,7 +43,7 @@ def init(todayDirectory, args):
                 sellAll(price)
             elif (price - boughtPrice >= thresholdValue and (not sellHalf.has_been_called)):  # scenarion 1 
                 sellHalf()
-            elif ((boughtPrice <= price <= boughtPrice + thresholdValue) and sellHalf.has_been_called): # scenario 2
+            elif ((boughtPrice <= price < boughtPrice + thresholdValue) and sellHalf.has_been_called): # scenario 2
                 sellAll(price)
             elif (price - boughtPrice < (-1 * thresholdValue)):  # scenario 3
                 sellAll(price)
