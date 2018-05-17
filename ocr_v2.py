@@ -22,10 +22,10 @@ def init(todayDirectory, args):
     boughtStock = False
 
     while(counter):
-        # img = gui.screenshot(
-        #     region=(digitLeft, digitTop, digitWidth, digitHeight))
         img = gui.screenshot(
-            region=(testLeft, testTop, testWidth, testHeight))
+            region=(digitLeft, digitTop, digitWidth, digitHeight))
+        # img = gui.screenshot(
+        #     region=(testLeft, testTop, testWidth, testHeight))
         try:
             guess = pytesseract.image_to_string(
                 img, config="-psm 6").replace(" ", "").replace(',', ".")
@@ -33,7 +33,7 @@ def init(todayDirectory, args):
             saveImg(img, todayDirectory, guess, 'true', 'png')
         except ValueError:
             wrongGuess = pytesseract.image_to_string(img, config="-psm 6")
-            print(wrongGuess)
+            print("Invalid Guess", wrongGuess)
             saveImg(img, todayDirectory, wrongGuess, 'false', 'png')
             continue
 
@@ -45,14 +45,16 @@ def init(todayDirectory, args):
                 print("Bought price", boughtPrice)
         else:
             if (price - boughtPrice >= (thresholdValue * 2)):  # scenario 4
+                print('Senario 4: Sold All')
                 sellAll(price)
             elif ( (price - boughtPrice >= thresholdValue) and (not sellHalf.has_been_called)):  # scenario 1 
-                print('Half Sold', price)
+                print('Scenario 1: Half Sold', price)
                 sellHalf()
             elif ( ((boughtPrice <= price) and (price < boughtPrice + thresholdValue)) and sellHalf.has_been_called): # scenario 2
-                print('Senario 2')
+                print('Senario 2: Sold All')
                 sellAll(price)
             elif (price - boughtPrice < (-1 * thresholdValue)):  # scenario 3
+                print('Senario 3: Sold All')
                 sellAll(price)
             
 
