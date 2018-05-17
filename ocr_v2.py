@@ -16,7 +16,7 @@ def init(todayDirectory, args):
     digitHeight = 14
     testTop, testLeft, testWidth, testHeight = getTestPosition()
     boughtPriceThreshold = 0.03
-    sellPriceThreshold = 0.05
+    sellPriceThreshold = -0.05
     stockName, boughtPrice, thresholdType, thresholdValue = initValues(args)
     sellHalf.has_been_called = False
     boughtStock = False
@@ -50,7 +50,7 @@ def init(todayDirectory, args):
             elif ( (price - boughtPrice >= thresholdValue) and (not sellHalf.has_been_called)):  # scenario 1 
                 print('Scenario 1: Half Sold', price)
                 sellHalf()
-            elif ( ((boughtPrice <= price) and (price < boughtPrice + thresholdValue)) and sellHalf.has_been_called): # scenario 2
+            elif ( ((boughtPrice <= price) and (price < boughtPrice + (thresholdValue - sellPriceThreshold)) and sellHalf.has_been_called): # scenario 2
                 print('Senario 2: Sold All')
                 sellAll(price)
             elif (price - boughtPrice < (-1 * thresholdValue)):  # scenario 3
