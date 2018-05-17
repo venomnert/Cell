@@ -14,17 +14,21 @@ def init(todayDirectory, args):
     digitLeft = 665
     digitWidth = 100
     digitHeight = 14
-    boughtPriceThreshold = 0.3
+    testTop, testLeft, testWidth, testHeight = getTestPosition()
+    boughtPriceThreshold = 0.03
+    sellPriceThreshold = 0.05
     stockName, boughtPrice, thresholdType, thresholdValue = initValues(args)
     sellHalf.has_been_called = False
     boughtStock = False
 
     while(counter):
+        # img = gui.screenshot(
+        #     region=(digitLeft, digitTop, digitWidth, digitHeight))
         img = gui.screenshot(
-            region=(digitLeft, digitTop, digitWidth, digitHeight))
+            region=(testLeft, testTop, testWidth, testHeight))
         try:
             guess = pytesseract.image_to_string(
-                img, config="-psm 6").replace(" ", "")
+                img, config="-psm 6").replace(" ", "").replace(',', ".")
             price = float(guess)
             saveImg(img, todayDirectory, guess, 'true', 'png')
         except ValueError:
@@ -34,16 +38,19 @@ def init(todayDirectory, args):
             continue
 
         if not boughtStock:
-            if (boughtPrice <= price <= boughtPrice + boughtPriceThreshold):
+            if ( (boughtPrice <= price) and  (price <= boughtPrice + boughtPriceThreshold)):
                 boughtPrice = price
                 buyAll()
                 boughtStock = True
+                print("Bought price", boughtPrice)
         else:
             if (price - boughtPrice >= (thresholdValue * 2)):  # scenario 4
                 sellAll(price)
-            elif (price - boughtPrice >= thresholdValue and (not sellHalf.has_been_called)):  # scenarion 1 
+            elif ( (price - boughtPrice >= thresholdValue) and (not sellHalf.has_been_called)):  # scenario 1 
+                print('Half Sold', price)
                 sellHalf()
-            elif ((boughtPrice <= price < boughtPrice + thresholdValue) and sellHalf.has_been_called): # scenario 2
+            elif ( ((boughtPrice <= price) and (price < boughtPrice + thresholdValue)) and sellHalf.has_been_called): # scenario 2
+                print('Senario 2')
                 sellAll(price)
             elif (price - boughtPrice < (-1 * thresholdValue)):  # scenario 3
                 sellAll(price)
@@ -93,6 +100,14 @@ def sellAll(price):
 def buyAll():
     gui.click(x=885, y=479, clicks=1, button='left')
     print('Bought stock')
+
+def getTestPosition():
+    testTop = 262
+    testLeft = 388
+    testWidth = 480 - testLeft
+    testHeight = 280 - testTop
+
+    return [testTop, testLeft, testWidth, testHeight]
 
 def main():
     ap = argparse.ArgumentParser()
