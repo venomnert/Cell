@@ -6,7 +6,7 @@ import os
 import argparse
 import sys
 
-pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract'
+#pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract'
 
 def init(todayDirectory, args):
     counter = True
@@ -39,10 +39,11 @@ def init(todayDirectory, args):
 
         if not boughtStock:
             if ( (boughtPrice <= price) and  (price <= boughtPrice + boughtPriceThreshold)):
-                boughtPrice = price
                 buyAll()
+                boughtPrice = getFilledPrice() if getFilledPrice() else price
                 boughtStock = True
-                print("Bought price", boughtPrice)
+                print("Filled price", boughtPrice)
+                print("Asked price", price)
         else:
             if (price - boughtPrice >= (thresholdValue * 2)):  # scenario 4
                 print('Senario 4: Sold All')
@@ -57,7 +58,27 @@ def init(todayDirectory, args):
                 print('Senario 3: Sold All')
                 sellAll(price)
             
+def getFilledPrice():
+    digitLeft = 150
+    digitTop = 546
+    digitWidth = 241 - digitLeft
+    digitHeight = 570 - digitTop
+    price = 0
+    
+    img = gui.screenshot(region=(digitLeft, digitTop, digitWidth, digitHeight))
+    while True:
+        try:
+            guess = pytesseract.image_to_string(
+                img, config="-psm 6").replace(" ", "").replace(',', ".")
+            price = float(guess)
+            break
+        except ValueError:
+            wrongGuess = pytesseract.image_to_string(img, config="-psm 6")
+            print("Can not read filled price ", wrongGuess)
+            price = None
+    return price
 
+    
 def initValues(args):
     stockName = args['stock']
     boughtPrice = float(args['bought_price'])
