@@ -1,5 +1,5 @@
 # Cell
-Cell the trading bot
+Cell the trading bot is a proof of concept to determine if GUI automation for QuestTrade is possible. 
 
 ## Steps
 
